@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useTimelineStore } from "./store";
 import { DURATION, TIME } from "./config";
 
@@ -8,7 +8,6 @@ export const PlayControls = () => {
   const duration = useTimelineStore((state) => state.duration);
   const setDuration = useTimelineStore((state) => state.setDuration);
 
-  // TODO: implement time <= maxTime
   const [tempTime, setTempTime] = useState<string>(String(time));
   const [tempDuration, setTempDuration] = useState<string>(String(duration));
   const timeInputRef = useRef<HTMLInputElement>(null);
@@ -18,6 +17,11 @@ export const PlayControls = () => {
   const stepTimeClickedRef = useRef<boolean>(false);
   const stepDurationClickedRef = useRef<boolean>(false);
 
+  // update tempTime when time changes
+  useEffect(() => {
+    setTempTime(String(time));
+  }, [time]);
+  
   const commitTime = useCallback(
     (value: string) => {
       // console.log("commit");

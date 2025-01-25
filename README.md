@@ -63,10 +63,10 @@ https://github.com/user-attachments/assets/9a669854-e0c5-4950-8364-10fe0b40d16b
 
 https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
-- [ ] Clicking or dragging on the Ruler updates the Current Time and Playhead position
+- [x] Clicking or dragging on the Ruler updates the Current Time and Playhead position
 - [ ] Horizontal scrolling of the Ruler is synchronized with the Keyframe List
-- [ ] Ruler length visually represents the total Duration (`1ms = 1px`)
-- [ ] Ruler length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
+- [x] Ruler length visually represents the total Duration (`1ms = 1px`)
+- [x] Ruler length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
 ### 4. Track List Behavior
 
@@ -80,8 +80,8 @@ https://github.com/user-attachments/assets/99826161-f821-4e4d-b9a8-b59c16d9894e
 
 - [ ] Vertical scrolling is synchronized with the Track List
 - [ ] Horizontal scrolling is synchronized with the Ruler
-- [ ] Segment length visually represents the total Duration (`1ms = 1px`)
-- [ ] Segment length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
+- [x] Segment length visually represents the total Duration (`1ms = 1px`)
+- [x] Segment length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
 ### 6. Playhead Behavior
 
