@@ -5,3 +5,4 @@ export * from "./Ruler";
 export * from "./TrackList";
 export * from "./Playhead";
 export * from "./Segment";
+export * from "./store";

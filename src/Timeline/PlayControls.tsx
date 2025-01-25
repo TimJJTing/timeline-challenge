@@ -1,98 +1,165 @@
 import React, { useState, useCallback, useRef } from "react";
+import { useTimelineStore } from "./store";
+import { DURATION, TIME } from "./config";
 
-type PlayControlsProps = {
-  time: number;
-  setTime: (time: number) => void;
-};
+export const PlayControls = () => {
+  const time = useTimelineStore((state) => state.time);
+  const setTime = useTimelineStore((state) => state.setTime);
+  const duration = useTimelineStore((state) => state.duration);
+  const setDuration = useTimelineStore((state) => state.setDuration);
 
-export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   // TODO: implement time <= maxTime
-  const [tempValue, setTempValue] = useState<string>(String(time));
-  const currentInputRef = useRef<HTMLInputElement>(null);
+  const [tempTime, setTempTime] = useState<string>(String(time));
+  const [tempDuration, setTempDuration] = useState<string>(String(duration));
+  const timeInputRef = useRef<HTMLInputElement>(null);
   const durationInputRef = useRef<HTMLInputElement>(null);
-  const previousValidValueRef = useRef(time);
-  const commitLockedRef = useRef<boolean>(false);
-  const stepClickedRef = useRef<boolean>(false);
+  const commitTimeLockedRef = useRef<boolean>(false);
+  const commitDurationLockedRef = useRef<boolean>(false);
+  const stepTimeClickedRef = useRef<boolean>(false);
+  const stepDurationClickedRef = useRef<boolean>(false);
 
-  const validateAndFormatValue = (value: string): number => {
-    const numValue = parseInt(value, 10);
-    if (isNaN(numValue)) return previousValidValueRef.current;
-    if (numValue < 0) return 0;
-    if (numValue > 2000) return 2000;
-    return numValue;
-  };
+  const commitTime = useCallback(
+    (value: string) => {
+      // console.log("commit");
+      const newValue = setTime(value);
+      setTempTime(String(newValue));
+    },
+    [setTime]
+  );
+  const commitDuration = useCallback(
+    (value: string) => {
+      // console.log("commit");
+      const newValue = setDuration(value);
+      setTempDuration(String(newValue));
 
-  const commitValue = (value: string) => {
-    // console.log("commit");
-    const validValue = validateAndFormatValue(value);
-    previousValidValueRef.current = validValue;
-    setTime(validValue);
-    setTempValue(String(validValue));
-  };
+      // Adjust current time if it exceeds the newly set Duration
+      if (time > newValue) {
+        commitTime(String(newValue));
+      }
+    },
+    [setDuration, commitTime, time]
+  );
 
   const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   }, []);
 
-  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-    commitValue(e.target.value);
-  }, []);
+  const handleTimeBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      commitTime(e.target.value);
+    },
+    [commitTime]
+  );
+  const handleDurationBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      commitDuration(e.target.value);
+    },
+    [commitDuration]
+  );
 
-  const handleKeyDown = useCallback(
+  const handleTimeKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       // console.log("keydown");
-      const currentInput = currentInputRef.current;
-      const previousValidValue = previousValidValueRef.current;
+      const currentInput = timeInputRef.current;
       if (e.key === "Enter") {
         e.currentTarget.blur();
-        commitValue(e.currentTarget.value);
+        commitTime(e.currentTarget.value);
       } else if (e.key === "Escape") {
-        setTempValue(String(previousValidValue));
+        setTempTime(String(time));
         requestAnimationFrame(() => {
           currentInput?.blur();
         });
       } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-        const step = e.shiftKey ? 100 : 10;
+        const step = e.shiftKey ? TIME.STEP * 10 : TIME.STEP;
         const direction = e.key === "ArrowUp" ? 1 : -1;
-        const newValue = validateAndFormatValue(
-          String(time + step * direction)
-        );
-        commitValue(String(newValue));
-        commitLockedRef.current = true; // lock it so it won't be trigged elsewhere
+        const newValue = String(time + step * direction);
+        commitTime(String(newValue));
+        commitTimeLockedRef.current = true; // lock it so it won't be trigged elsewhere
         requestAnimationFrame(() => {
           currentInput?.select();
         });
       } else {
-        stepClickedRef.current = false;
+        stepTimeClickedRef.current = false;
       }
     },
-    [time]
+    [time, commitTime]
+  );
+  const handleDurationKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      // console.log("keydown");
+      const currentInput = durationInputRef.current;
+      if (e.key === "Enter") {
+        e.currentTarget.blur();
+        commitDuration(e.currentTarget.value);
+      } else if (e.key === "Escape") {
+        setTempDuration(String(duration));
+        requestAnimationFrame(() => {
+          currentInput?.blur();
+        });
+      } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        const step = e.shiftKey ? TIME.STEP * 10 : TIME.STEP;
+        const direction = e.key === "ArrowUp" ? 1 : -1;
+        const newValue = String(duration + step * direction);
+        commitDuration(String(newValue));
+        commitDurationLockedRef.current = true; // lock it so it won't be trigged elsewhere
+        requestAnimationFrame(() => {
+          currentInput?.select();
+        });
+      } else {
+        stepDurationClickedRef.current = false;
+      }
+    },
+    [duration, commitDuration]
   );
 
-  const handleClicked = useCallback(() => {
+  const handleTimeClicked = useCallback(() => {
     // console.log("clicked");
-    stepClickedRef.current = true;
+    stepTimeClickedRef.current = true;
+  }, []);
+  const handleDurationClicked = useCallback(() => {
+    // console.log("clicked");
+    stepDurationClickedRef.current = true;
   }, []);
 
-  const handleChange = useCallback(
+  const handleTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       // console.log("change");
-      const stepClicked = stepClickedRef.current;
-      const commitLocked = commitLockedRef.current;
-      const currentInput = currentInputRef.current;
-      commitLockedRef.current = false;
+      const stepClicked = stepTimeClickedRef.current;
+      const commitLocked = commitTimeLockedRef.current;
+      const currentInput = timeInputRef.current;
+      commitTimeLockedRef.current = false;
       if (!stepClicked && !commitLocked) {
         // if not clicked and commit not locked, must be trigged from typing numbers
-        setTempValue(e.target.value);
+        setTempTime(e.target.value);
       } else if (!commitLocked) {
         // if clicked but commit not locked, must be trigged from clicking steppers
-        commitValue(e.target.value);
+        commitTime(e.target.value);
         requestAnimationFrame(() => {
           currentInput?.select();
         });
       }
     },
-    []
+    [commitTime]
+  );
+  const handleDurationChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      // console.log("change");
+      const stepClicked = stepDurationClickedRef.current;
+      const commitLocked = commitDurationLockedRef.current;
+      const currentInput = durationInputRef.current;
+      commitDurationLockedRef.current = false;
+      if (!stepClicked && !commitLocked) {
+        // if not clicked and commit not locked, must be trigged from typing numbers
+        setTempDuration(e.target.value);
+      } else if (!commitLocked) {
+        // if clicked but commit not locked, must be trigged from clicking steppers
+        commitDuration(e.target.value);
+        requestAnimationFrame(() => {
+          currentInput?.select();
+        });
+      }
+    },
+    [commitDuration]
   );
 
   return (
@@ -104,19 +171,19 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
       <fieldset className="flex gap-1">
         Current
         <input
-          ref={currentInputRef}
+          ref={timeInputRef}
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="current-time-input"
-          min={0}
-          max={2000}
-          step={10}
-          value={tempValue}
-          onChange={handleChange}
+          min={TIME.MIN}
+          max={duration}
+          step={TIME.STEP}
+          value={tempTime}
+          onChange={handleTimeChange}
           onFocus={handleFocus}
-          onBlur={handleBlur}
-          onMouseDown={handleClicked}
-          onKeyDown={handleKeyDown}
+          onBlur={handleTimeBlur}
+          onMouseDown={handleTimeClicked}
+          onKeyDown={handleTimeKeyDown}
         />
       </fieldset>
       -
@@ -126,11 +193,15 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="duration-input"
-          min={100}
-          max={2000}
-          step={10}
-          defaultValue={2000}
+          min={DURATION.MIN}
+          max={DURATION.MAX}
+          step={TIME.STEP}
+          value={tempDuration}
+          onChange={handleDurationChange}
           onFocus={handleFocus}
+          onBlur={handleDurationBlur}
+          onMouseDown={handleDurationClicked}
+          onKeyDown={handleDurationKeyDown}
         />
         Duration
       </fieldset>

@@ -1,8 +1,8 @@
-type PlayheadProps = {
-  time: number;
-};
+import { useTimelineStore } from "./store";
 
-export const Playhead = ({ time }: PlayheadProps) => {
+export const Playhead = () => {
+  const time = useTimelineStore((state) => state.time);
+  // const setTime = useTimelineStore((state) => state.setTime);
   return (
     <div
       className="absolute left-[316px] h-full border-l-2 border-solid border-yellow-600 z-10"
