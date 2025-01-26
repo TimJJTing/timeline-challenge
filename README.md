@@ -64,7 +64,7 @@ https://github.com/user-attachments/assets/9a669854-e0c5-4950-8364-10fe0b40d16b
 https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
 - [x] Clicking or dragging on the Ruler updates the Current Time and Playhead position
-- [ ] Horizontal scrolling of the Ruler is synchronized with the Keyframe List
+- [x] Horizontal scrolling of the Ruler is synchronized with the Keyframe List
 - [x] Ruler length visually represents the total Duration (`1ms = 1px`)
 - [x] Ruler length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
@@ -72,14 +72,14 @@ https://github.com/user-attachments/assets/42190ade-f708-45a1-8168-2be779c66390
 
 https://github.com/user-attachments/assets/94b5e2c8-ef32-488e-97e4-d53036bbf2f7
 
-- [ ] Vertical scrolling of the Track List is synchronized with the Keyframe List
+- [x] Vertical scrolling of the Track List is synchronized with the Keyframe List
 
 ### 5. Keyframe List Behavior
 
 https://github.com/user-attachments/assets/99826161-f821-4e4d-b9a8-b59c16d9894e
 
-- [ ] Vertical scrolling is synchronized with the Track List
-- [ ] Horizontal scrolling is synchronized with the Ruler
+- [x] Vertical scrolling is synchronized with the Track List
+- [x] Horizontal scrolling is synchronized with the Ruler
 - [x] Segment length visually represents the total Duration (`1ms = 1px`)
 - [x] Segment length updates only after specific actions on Duration input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)
 
