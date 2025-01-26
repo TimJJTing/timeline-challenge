@@ -1,5 +1,5 @@
 // useScrollSync.ts
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export const useScrollSync = () => {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -23,4 +23,26 @@ export const useScrollSync = () => {
   };
 
   return { syncScroll };
+};
+
+export const useScrollPosition = () => {
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  const updatePosition = useCallback(
+    (
+      scrolledRef: React.RefObject<HTMLElement>
+    ) => {
+      if (scrolledRef.current) {
+        const scrollTop = scrolledRef.current.scrollTop;
+        const scrollLeft = scrolledRef.current.scrollLeft;
+        setPosition({
+          top: scrollTop,
+          left: scrollLeft,
+        });
+      }
+    },
+    []
+  );
+
+  return { position, updatePosition };
 };
