@@ -6,13 +6,14 @@ interface TimelineState {
   duration: number;
   setTime: (val: number | string) => number;
   setDuration: (val: number | string) => number;
+  reset: () => void;
 }
 
 /**
  * Validate value before commit
  * @param value value to validate
  * @param oldValue original value
- * @param max max value allowed 
+ * @param max max value allowed
  * @param min min value allowed
  * @returns validated value
  */
@@ -58,5 +59,11 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
       duration: newValue,
     }));
     return newValue;
+  },
+  reset: () => {
+    set(() => ({
+      time: TIME.INIT,
+      duration: DURATION.INIT,
+    }));
   },
 }));
