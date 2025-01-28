@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  act,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Timeline } from "../Timeline";
 import { useTimelineStore } from "../store";
@@ -24,6 +18,7 @@ describe("Ruler Behavior", () => {
       playhead: screen.getByTestId("playhead") as HTMLDivElement,
       ruler: screen.getByTestId("ruler") as HTMLDivElement,
       rulerBar: screen.getByTestId("ruler-bar") as HTMLDivElement,
+      keyframeList: screen.getByTestId("keyframe-list") as HTMLDivElement,
     };
   };
   const simulateStepperClick = async (
@@ -155,8 +150,49 @@ describe("Ruler Behavior", () => {
     });
   });
 
-  // TODO
-  // describe("Horizontal scrolling of the Ruler is synchronized with the Keyframe List", () => {});
+  describe("Horizontal scrolling of the Ruler is synchronized with the Keyframe List", () => {
+    it("scrolls the Keyframe List by 300px left if Ruler is scrolled by 300px left", async () => {
+      const { ruler, keyframeList } = setupComponent();
+
+      await act(async () => {
+        fireEvent.scroll(ruler, { target: { scrollLeft: 300 } });
+      });
+      expect(ruler.scrollLeft).toEqual(300);
+      expect(keyframeList.scrollLeft).toEqual(300);
+    });
+
+    it("scrolls the Ruler by 300px left if Keyframe List is scrolled by 300px left", async () => {
+      const { ruler, keyframeList } = setupComponent();
+
+      await act(async () => {
+        fireEvent.scroll(keyframeList, { target: { scrollLeft: 300 } });
+      });
+      expect(keyframeList.scrollLeft).toEqual(300);
+      expect(ruler.scrollLeft).toEqual(300);
+    });
+
+    it("scrolls the Keyframe List by 300px left eventually if Ruler is scrolled by 300px left then 150px right", async () => {
+      const { ruler, keyframeList } = setupComponent();
+
+      await act(async () => {
+        fireEvent.scroll(ruler, { target: { scrollLeft: 300 } });
+        fireEvent.scroll(ruler, { target: { scrollLeft: 150 } });
+      });
+      expect(ruler.scrollLeft).toEqual(150);
+      expect(keyframeList.scrollLeft).toEqual(150);
+    });
+
+    it("scrolls the Ruler by 150px left eventually if Keyframe List is scrolled by 300px left then 150px right", async () => {
+      const { ruler, keyframeList } = setupComponent();
+
+      await act(async () => {
+        fireEvent.scroll(keyframeList, { target: { scrollLeft: 300 } });
+        fireEvent.scroll(keyframeList, { target: { scrollLeft: 150 } });
+      });
+      expect(keyframeList.scrollLeft).toEqual(150);
+      expect(ruler.scrollLeft).toEqual(150);
+    });
+  });
 
   describe("Ruler length visually represents the total Duration (1ms = 1px)", () => {
     it("has {initDuration}px when duration is {initDuration}", async () => {
