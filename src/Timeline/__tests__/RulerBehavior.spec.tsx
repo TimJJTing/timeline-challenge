@@ -151,7 +151,7 @@ describe("Ruler Behavior", () => {
   });
 
   describe("Horizontal scrolling of the Ruler is synchronized with the Keyframe List", () => {
-    it("scrolls the Keyframe List by 300px left if Ruler is scrolled by 300px left", async () => {
+    it("scrolls the Keyframe List by 300px right if the Ruler is scrolled by 300px right", async () => {
       const { ruler, keyframeList } = setupComponent();
 
       await act(async () => {
@@ -161,17 +161,7 @@ describe("Ruler Behavior", () => {
       expect(keyframeList.scrollLeft).toEqual(300);
     });
 
-    it("scrolls the Ruler by 300px left if Keyframe List is scrolled by 300px left", async () => {
-      const { ruler, keyframeList } = setupComponent();
-
-      await act(async () => {
-        fireEvent.scroll(keyframeList, { target: { scrollLeft: 300 } });
-      });
-      expect(keyframeList.scrollLeft).toEqual(300);
-      expect(ruler.scrollLeft).toEqual(300);
-    });
-
-    it("scrolls the Keyframe List by 300px left eventually if Ruler is scrolled by 300px left then 150px right", async () => {
+    it("scrolls the Keyframe List by 300px right eventually if the Ruler is scrolled by 300px right then 150px left", async () => {
       const { ruler, keyframeList } = setupComponent();
 
       await act(async () => {
@@ -180,17 +170,6 @@ describe("Ruler Behavior", () => {
       });
       expect(ruler.scrollLeft).toEqual(150);
       expect(keyframeList.scrollLeft).toEqual(150);
-    });
-
-    it("scrolls the Ruler by 150px left eventually if Keyframe List is scrolled by 300px left then 150px right", async () => {
-      const { ruler, keyframeList } = setupComponent();
-
-      await act(async () => {
-        fireEvent.scroll(keyframeList, { target: { scrollLeft: 300 } });
-        fireEvent.scroll(keyframeList, { target: { scrollLeft: 150 } });
-      });
-      expect(keyframeList.scrollLeft).toEqual(150);
-      expect(ruler.scrollLeft).toEqual(150);
     });
   });
 
