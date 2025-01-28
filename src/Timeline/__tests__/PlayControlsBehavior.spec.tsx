@@ -5,7 +5,7 @@ import { useTimelineStore } from "../store";
 const initialStoreState = useTimelineStore.getState();
 
 // integration tests
-describe("Number Input Field behaviors", () => {
+describe("Play Controls Behavior", () => {
   const setupComponent = () => {
     render(<Timeline />);
     return {
@@ -41,7 +41,7 @@ describe("Number Input Field behaviors", () => {
   });
 
   describe("Current Time Validation", () => {
-    it("initial value is between 0ms and the Duration", async () => {
+    it("has initial value between 0ms and the Duration", async () => {
       const { getTime, getDuration } = setupComponent();
       expect(getTime()).toBeGreaterThanOrEqual(0);
       expect(getTime()).toBeLessThanOrEqual(getDuration());
@@ -243,7 +243,7 @@ describe("Number Input Field behaviors", () => {
   });
 
   describe("Current Time adjusts if it exceeds the newly set Duration", () => {
-    it("Current Time should be 1000 when duration becomes 1000", async () => {
+    it("sets Time from 2000 to 1000 when duration becomes 1000", async () => {
       const { timeInput, durationInput, getTime, getDuration } =
         setupComponent();
       const user = userEvent.setup();
@@ -252,7 +252,7 @@ describe("Number Input Field behaviors", () => {
       expect(getTime()).toEqual(getDuration());
     });
 
-    it("Current Time should be 100 after trying set duration to -1000", async () => {
+    it("sets Time from 2000 to 100 after trying set duration to -1000", async () => {
       const { timeInput, durationInput, getTime, getDuration } =
         setupComponent();
       const user = userEvent.setup();
@@ -262,7 +262,7 @@ describe("Number Input Field behaviors", () => {
       expect(getTime()).toEqual(getDuration());
     });
 
-    it("Current Time should be 1990 after duration stepper down is clicked", async () => {
+    it("sets Time from 2000 to 1990 after duration stepper down is clicked", async () => {
       const { timeInput, durationInput, getTime, getDuration } =
         setupComponent();
       const user = userEvent.setup();
@@ -271,7 +271,7 @@ describe("Number Input Field behaviors", () => {
       expect(getTime()).toEqual(getDuration());
     });
 
-    it("Current Time should be 1990 after duration {arrowDown} is pressed", async () => {
+    it("sets Time from 2000 to 1990 after duration {arrowDown} is pressed", async () => {
       const { timeInput, durationInput, getTime, getDuration } =
         setupComponent();
       const user = userEvent.setup();
@@ -282,13 +282,13 @@ describe("Number Input Field behaviors", () => {
   });
 
   describe("Playhead position updates only after specific actions on Current Time input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)", () => {
-    it("Playhead should stay at 0px initially", async () => {
+    it("stays at 0px initially", async () => {
       const { initTime, playhead } = setupComponent();
       expect(playhead).toHaveStyle(
         `transform: translateX(calc(${initTime}px - 50%))`
       );
     });
-    it("Playhead should stay at 0px after keying 120 without pressing {enter}", async () => {
+    it("stays at 0px after keying 120 without pressing {enter}", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -299,7 +299,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should move to 180px after keying 180{enter}", async () => {
+    it("moves to 180px after keying 180{enter}", async () => {
       const { timeInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -307,7 +307,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle(`transform: translateX(calc(180px - 50%))`);
     });
 
-    it("Playhead should move to 200px after keying 200 and focus on something else", async () => {
+    it("moves to 200px after keying 200 and focus on something else", async () => {
       const { timeInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -316,7 +316,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle(`transform: translateX(calc(200px - 50%))`);
     });
 
-    it("Playhead should stay at 0px after keying 200{escape}", async () => {
+    it("stays at 0px after keying 200{escape}", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -326,7 +326,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should move to 0 + step after pressing {arrowUp} when time is 0", async () => {
+    it("moves to 0 + step after pressing {arrowUp} when time is 0", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -338,7 +338,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should stay at 0px after pressing {arrowDown} when time is 0", async () => {
+    it("stays at 0px after pressing {arrowDown} when time is 0", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.click(timeInput);
@@ -348,7 +348,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should move to 1990px after pressing {arrowDown} when time is 2000", async () => {
+    it("moves to 1990px after pressing {arrowDown} when time is 2000", async () => {
       const { timeInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.type(timeInput, "2000{enter}");
@@ -357,7 +357,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle("transform: translateX(calc(1990px - 50%))");
     });
 
-    it("Playhead should move to 0 + step after clicking stepper up when time is 0", async () => {
+    it("moves to 0 + step after clicking stepper up when time is 0", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await simulateStepperClick(user, timeInput, true);
@@ -368,7 +368,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should stay at 0px after pressing stepper down when time is 0", async () => {
+    it("stays at 0px after pressing stepper down when time is 0", async () => {
       const { timeInput, initTime, playhead } = setupComponent();
       const user = userEvent.setup();
       await simulateStepperClick(user, timeInput, false);
@@ -377,7 +377,7 @@ describe("Number Input Field behaviors", () => {
       );
     });
 
-    it("Playhead should move to 1990px after pressing stepper down when time is 2000", async () => {
+    it("moves to 1990px after pressing stepper down when time is 2000", async () => {
       const { timeInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.type(timeInput, "2000{enter}");
@@ -385,7 +385,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle("transform: translateX(calc(1990px - 50%))");
     });
 
-    it("Playhead should move to 1000px after setting duration to 1000", async () => {
+    it("moves to 1000px after setting duration to 1000", async () => {
       const { timeInput, durationInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.type(timeInput, "2000{enter}");
@@ -393,7 +393,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle("transform: translateX(calc(1000px - 50%))");
     });
 
-    it("Playhead should move to 990px after setting duration to 1000 and then press {arrowDown}", async () => {
+    it("moves to 990px after setting duration to 1000 and then press {arrowDown}", async () => {
       const { timeInput, durationInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.type(timeInput, "2000{enter}");
@@ -402,7 +402,7 @@ describe("Number Input Field behaviors", () => {
       expect(playhead).toHaveStyle("transform: translateX(calc(990px - 50%))");
     });
 
-    it("Playhead should move to 990px after setting duration to 1000 and then click stepper down", async () => {
+    it("moves to 990px after setting duration to 1000 and then click stepper down", async () => {
       const { timeInput, durationInput, playhead } = setupComponent();
       const user = userEvent.setup();
       await user.type(timeInput, "2000{enter}");
