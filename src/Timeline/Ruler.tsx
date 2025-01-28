@@ -1,4 +1,4 @@
-import { useMemo, useCallback, forwardRef } from "react";
+import { useEffect, useState, useCallback, useRef, forwardRef } from "react";
 import { useTimelineStore } from "./store";
 
 interface RulerProps {
@@ -7,43 +7,39 @@ interface RulerProps {
 
 export const Ruler = forwardRef<HTMLDivElement, RulerProps>(
   ({ onScroll }, ref) => {
-    // TODO: implement mousedown and mousemove to update time and Playhead position
     const setTime = useTimelineStore((state) => state.setTime);
     const duration = useTimelineStore((state) => state.duration);
-    const invisibleImage = useMemo(() => {
-      const img = new Image();
-      img.src =
-        "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
-      return img;
-    }, []);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const rulerBarRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isDragging || !rulerBarRef.current) return;
+        const rect = rulerBarRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        setTime(x);
+      };
+
+      if (isDragging) {
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", () => setIsDragging(false));
+      }
+
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", () => setIsDragging(false));
+      };
+    }, [setTime, isDragging]);
 
     const handleRulerMouseDown = useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault(); // Prevent text selection
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         setTime(x);
+        setIsDragging(true);
       },
       [setTime]
-    );
-    const handleRulerDrag = useCallback(
-      (e: React.DragEvent<HTMLDivElement>) => {
-        // when drag ends, the last cursor position is (0,0), this is not what we want
-        if (e.screenX === 0 && e.screenY === 0) {
-          return;
-        }
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        setTime(x);
-      },
-      [setTime]
-    );
-    const handleRulerDragStart = useCallback(
-      (e: React.DragEvent<HTMLDivElement>) => {
-        // get rid of ghost image and little earth when drag starts
-        e.dataTransfer.effectAllowed = "none";
-        e.dataTransfer.setDragImage(invisibleImage, 0, 0);
-      },
-      []
     );
 
     return (
@@ -56,13 +52,11 @@ export const Ruler = forwardRef<HTMLDivElement, RulerProps>(
         onScroll={onScroll}
       >
         <div
+          ref={rulerBarRef}
           className="h-6 rounded-md bg-white/25"
           style={{ width: `${duration}px` }}
           data-testid="ruler-bar"
           onMouseDown={handleRulerMouseDown}
-          draggable
-          onDragStart={handleRulerDragStart}
-          onDrag={handleRulerDrag}
         ></div>
       </div>
     );

@@ -98,17 +98,60 @@ describe("Ruler Behavior", () => {
       const { rulerBar, playhead, timeInput, getTime } = setupComponent();
       const user = userEvent.setup();
 
-      // TODO: need to refactor ruler, otherwise this won't work
       await user.pointer([
         { coords: { clientX: 100, clientY: 10 }, target: rulerBar },
         { keys: "[MouseLeft>]", target: rulerBar },
         { coords: { clientX: 200, clientY: 10 }, target: rulerBar },
         { keys: "[/MouseLeft]", target: rulerBar },
       ]);
-
       expect(timeInput).toHaveValue(200);
       expect(getTime()).toEqual(200);
       expect(playhead).toHaveStyle("transform: translateX(calc(200px - 50%))");
+    });
+
+    it("handles mouse down on x position 100px and up on x position 2010px correctly", async () => {
+      const { rulerBar, playhead, timeInput, getTime } = setupComponent();
+      const user = userEvent.setup();
+
+      await user.pointer([
+        { coords: { clientX: 100, clientY: 10 }, target: rulerBar },
+        { keys: "[MouseLeft>]", target: rulerBar },
+        { coords: { clientX: 2010, clientY: 10 }, target: rulerBar },
+        { keys: "[/MouseLeft]", target: rulerBar },
+      ]);
+      expect(timeInput).toHaveValue(2000);
+      expect(getTime()).toEqual(2000);
+      expect(playhead).toHaveStyle("transform: translateX(calc(2000px - 50%))");
+    });
+
+    it("handles mouse down on x position 200px and up on x position 100px correctly", async () => {
+      const { rulerBar, playhead, timeInput, getTime } = setupComponent();
+      const user = userEvent.setup();
+
+      await user.pointer([
+        { coords: { clientX: 200, clientY: 10 }, target: rulerBar },
+        { keys: "[MouseLeft>]", target: rulerBar },
+        { coords: { clientX: 100, clientY: 10 }, target: rulerBar },
+        { keys: "[/MouseLeft]", target: rulerBar },
+      ]);
+      expect(timeInput).toHaveValue(100);
+      expect(getTime()).toEqual(100);
+      expect(playhead).toHaveStyle("transform: translateX(calc(100px - 50%))");
+    });
+
+    it("handles mouse down on x position 200px and up on x position -100px correctly", async () => {
+      const { rulerBar, playhead, timeInput, getTime } = setupComponent();
+      const user = userEvent.setup();
+
+      await user.pointer([
+        { coords: { clientX: 200, clientY: 10 }, target: rulerBar },
+        { keys: "[MouseLeft>]", target: rulerBar },
+        { coords: { clientX: -100, clientY: 10 }, target: rulerBar },
+        { keys: "[/MouseLeft]", target: rulerBar },
+      ]);
+      expect(timeInput).toHaveValue(0);
+      expect(getTime()).toEqual(0);
+      expect(playhead).toHaveStyle("transform: translateX(calc(0px - 50%))");
     });
   });
 
