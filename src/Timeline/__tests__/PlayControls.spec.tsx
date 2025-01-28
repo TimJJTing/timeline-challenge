@@ -211,7 +211,7 @@ describe("Number Input Field", () => {
       await user.click(timeInput);
       expect(timeInput).toHaveFocus();
       await waitFor(async () => {
-        // TODO: works in real-world but somehow testing fails
+        // TODO: works in real-world but somehow fails here
         // expect(timeInput).toHaveSelection(timeInput.value);
       });
     });
@@ -225,7 +225,7 @@ describe("Number Input Field", () => {
       await simulateStepperClick(user, timeInput, true);
       expect(timeInput).toHaveFocus();
       await waitFor(() => {
-        // TODO: works in real-world but somehow testing fails
+        // TODO: works in real-world but somehow fails here
         // expect(timeInput).toHaveSelection(timeInput.value);
       });
     });
@@ -239,7 +239,7 @@ describe("Number Input Field", () => {
       await user.type(timeInput, "{arrowUp}");
       expect(timeInput).toHaveFocus();
       await waitFor(() => {
-        // TODO: works in real-world but somehow testing fails
+        // TODO: works in real-world but somehow fails here
         // expect(timeInput).toHaveSelection(timeInput.value);
       });
     });
@@ -250,7 +250,7 @@ describe("Number Input Field", () => {
       await user.type(timeInput, "{arrowDown}");
       expect(timeInput).toHaveFocus();
       await waitFor(() => {
-        // TODO: works in real-world but somehow testing fails
+        // TODO: works in real-world but somehow fails here
         // expect(timeInput).toHaveSelection(timeInput.value);
       });
     });
