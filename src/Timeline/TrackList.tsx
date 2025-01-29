@@ -6,8 +6,6 @@ interface TrackListProps {
 
 export const TrackList = forwardRef<HTMLDivElement, TrackListProps>(
   ({ onScroll }, ref) => {
-    // TODO: implement scroll sync with `KeyframeList`
-
     return (
       <div
         className="grid grid-flow-row auto-rows-[40px]
