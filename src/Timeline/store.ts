@@ -11,10 +11,10 @@ interface TimelineState {
 
 /**
  * Validate value before commit
- * @param value value to validate
- * @param oldValue original value
- * @param max max value allowed
- * @param min min value allowed
+ * @param {number | string} value value to validate
+ * @param {number} oldValue original value
+ * @param {number} max max value allowed
+ * @param {number} min min value allowed
  * @returns validated value
  */
 const validateAndFormatValue = (
@@ -36,6 +36,7 @@ const validateAndFormatValue = (
 export const useTimelineStore = create<TimelineState>((set, get) => ({
   time: TIME.INIT,
   duration: DURATION.INIT,
+  // set time with respect to the constraints
   setTime: (value) => {
     const newValue = validateAndFormatValue(
       value,
@@ -48,6 +49,7 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
     }));
     return newValue;
   },
+// set duration with respect to the constraints
   setDuration: (value) => {
     const newValue = validateAndFormatValue(
       value,
@@ -60,6 +62,7 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
     }));
     return newValue;
   },
+  // reset time and duration to initial values
   reset: () => {
     set(() => ({
       time: TIME.INIT,

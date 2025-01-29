@@ -4,9 +4,42 @@
 
 Implement interactive features for a Timeline component. We will provide a basic Timeline component scaffold, and your task is to implement the functionality that meets the user behavior requirements outlined below.
 
-![component-overview](./readme-assets/component-overview.jpg)
+## Project Setup
+
+Make you are using node 20 or have nvm installed:
+
+```sh
+nvm use 20
+```
+
+Install dependencies:
+
+```sh
+yarn
+```
+
+Run in dev mode:
+
+```sh
+npm run start
+```
+
+Run tests:
+
+```sh
+npm run test
+```
+
+Build as static and run with a [simple http server](http://localhost:8000/):
+
+```sh
+npm run build && cd build
+python3 -m http.server
+```
 
 ## Glossary
+
+![component-overview](./readme-assets/component-overview.jpg)
 
 - **Timeline**: The main component that visually represents the duration of a sequence of events or changes over time.
 - **Playhead**: The visual indicator that shows the current time position on the Timeline.

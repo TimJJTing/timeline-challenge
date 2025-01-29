@@ -1,3 +1,5 @@
+// Timeline configuration
+
 interface DurationConfig {
   readonly INIT: number;
   readonly MIN: number;
@@ -8,7 +10,6 @@ interface TimeConfig {
   readonly MIN: number;
   readonly STEP: number;
 }
-// Timeline configuration
 export const DURATION: DurationConfig = {
   INIT: 2000,
   MIN: 100,

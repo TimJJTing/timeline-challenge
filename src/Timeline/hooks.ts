@@ -1,6 +1,10 @@
-// useScrollSync.ts
+// hooks.ts
 import { useState, useCallback } from "react";
 
+/**
+ * A helper hook for syncing the scrolling position of two given ref elements.  
+ * Can optionally enable/disable syncing only horizontal/vertical scrolling.
+ */
 export const useScrollSync = () => {
   const [isScrolling, setIsScrolling] = useState(false);
 
@@ -25,13 +29,14 @@ export const useScrollSync = () => {
   return { syncScroll };
 };
 
+/**
+ * A helper hook for getting the scrolled position from the given ref element.
+ */
 export const useScrollPosition = () => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   const updatePosition = useCallback(
-    (
-      scrolledRef: React.RefObject<HTMLElement>
-    ) => {
+    (scrolledRef: React.RefObject<HTMLElement>) => {
       if (scrolledRef.current) {
         const scrollTop = scrolledRef.current.scrollTop;
         const scrollLeft = scrolledRef.current.scrollLeft;
