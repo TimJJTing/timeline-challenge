@@ -6,7 +6,9 @@ Implement interactive features for a Timeline component. We will provide a basic
 
 ## Project Setup
 
-Make you are using node 20 or have nvm installed:
+### With Node
+
+Make sure you are using node **20** or have nvm installed:
 
 ```sh
 nvm use 20
@@ -35,6 +37,42 @@ Build as static and run with a [simple http server](http://localhost:8000/):
 ```sh
 npm run build && cd build
 python3 -m http.server
+```
+
+### With Docker
+
+#### Development
+
+Build the development image:
+
+```sh
+docker build --target development -t timeline .
+```
+
+Run the development container and visit the site on [http://localhost:3000/](http://localhost:3000/):
+
+```sh
+docker run -p 3000:3000 -v $(pwd):/home/node/app -v /home/node/app/node_modules -it timeline
+```
+
+This will:
+
+- Map port 3000 to your host machine
+- Mount your current directory for live code updates
+- Preserve node_modules in a separate volume
+
+#### Production
+
+Build the production image:
+
+```sh
+docker build -t timeline-prod .
+```
+
+Run the production container and visit the site on [http://localhost:8080/](http://localhost:8080/):
+
+```sh
+docker run -p 8080:8080 -e PORT=8080 timeline-prod
 ```
 
 ## Glossary
