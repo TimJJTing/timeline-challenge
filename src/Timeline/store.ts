@@ -4,6 +4,8 @@ import { DURATION, TIME } from "./config";
 interface TimelineState {
   time: number;
   duration: number;
+}
+interface TimelineActions {
   setTime: (val: number | string) => number;
   setDuration: (val: number | string) => number;
   reset: () => void;
@@ -33,40 +35,43 @@ const validateAndFormatValue = (
   return value;
 };
 
-export const useTimelineStore = create<TimelineState>((set, get) => ({
+const initialState: TimelineState = {
   time: TIME.INIT,
   duration: DURATION.INIT,
-  // set time with respect to the constraints
-  setTime: (value) => {
-    const newValue = validateAndFormatValue(
-      value,
-      get().time,
-      get().duration,
-      TIME.MIN
-    );
-    set(() => ({
-      time: newValue,
-    }));
-    return newValue;
-  },
-// set duration with respect to the constraints
-  setDuration: (value) => {
-    const newValue = validateAndFormatValue(
-      value,
-      get().duration,
-      DURATION.MAX,
-      DURATION.MIN
-    );
-    set(() => ({
-      duration: newValue,
-    }));
-    return newValue;
-  },
-  // reset time and duration to initial values
-  reset: () => {
-    set(() => ({
-      time: TIME.INIT,
-      duration: DURATION.INIT,
-    }));
-  },
-}));
+};
+
+export const useTimelineStore = create<TimelineState & TimelineActions>(
+  (set, get) => ({
+    ...initialState,
+    // set time with respect to the constraints
+    setTime: (value) => {
+      const newValue = validateAndFormatValue(
+        value,
+        get().time,
+        get().duration,
+        TIME.MIN
+      );
+      set(() => ({
+        time: newValue,
+      }));
+      return newValue;
+    },
+    // set duration with respect to the constraints
+    setDuration: (value) => {
+      const newValue = validateAndFormatValue(
+        value,
+        get().duration,
+        DURATION.MAX,
+        DURATION.MIN
+      );
+      set(() => ({
+        duration: newValue,
+      }));
+      return newValue;
+    },
+    // reset time and duration to initial values
+    reset: () => {
+      set(initialState);
+    },
+  })
+);
