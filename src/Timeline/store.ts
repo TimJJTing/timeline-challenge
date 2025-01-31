@@ -1,17 +1,12 @@
 import { create } from "zustand";
 import { DURATION, TIME } from "./config";
-
 interface TimelineState {
   time: number;
   duration: number;
-  scrollLeft: number;
-  scrollTop: number;
 }
 interface TimelineActions {
   setTime: (val: number | string) => number;
   setDuration: (val: number | string) => number;
-  setScrollLeft: (val: number| undefined | null) => void;
-  setScrollTop: (val: number| undefined | null) => void;
   reset: () => void;
 }
 
@@ -39,16 +34,14 @@ const validateAndFormatValue = (
   return value;
 };
 
-const initialState: TimelineState = {
+const initialTimelineState: TimelineState = {
   time: TIME.INIT,
   duration: DURATION.INIT,
-  scrollLeft: 0,
-  scrollTop: 0,
 };
 
 export const useTimelineStore = create<TimelineState & TimelineActions>(
   (set, get) => ({
-    ...initialState,
+    ...initialTimelineState,
     // set time with respect to the constraints
     setTime: (value) => {
       const newValue = validateAndFormatValue(
@@ -75,23 +68,46 @@ export const useTimelineStore = create<TimelineState & TimelineActions>(
       }));
       return newValue;
     },
-    setScrollLeft: (value) => {
-      if (value !== null && value !== undefined) {
-        set(() => ({
-          scrollLeft: value,
-        }));
-      }
-    },
-    setScrollTop: (value) => {
-      if (value !== null && value !== undefined) {
-        set(() => ({
-          scrollTop: value,
-        }));
-      }
-    },
     // reset time and duration to initial values
     reset: () => {
-      set(initialState);
+      set(initialTimelineState);
     },
   })
 );
+
+interface ScrollState {
+  scrollLeft: number;
+  scrollTop: number;
+}
+interface ScrollActions {
+  setScrollLeft: (val: number | undefined | null) => void;
+  setScrollTop: (val: number | undefined | null) => void;
+  reset: () => void;
+}
+
+const initialScrollState: ScrollState = {
+  scrollLeft: 0,
+  scrollTop: 0,
+};
+
+export const useScrollStore = create<ScrollState & ScrollActions>((set) => ({
+  ...initialScrollState,
+  setScrollLeft: (value) => {
+    if (value !== null && value !== undefined) {
+      set(() => ({
+        scrollLeft: value,
+      }));
+    }
+  },
+  setScrollTop: (value) => {
+    if (value !== null && value !== undefined) {
+      set(() => ({
+        scrollTop: value,
+      }));
+    }
+  },
+  // reset scroll to initial values
+  reset: () => {
+    set(initialScrollState);
+  },
+}));

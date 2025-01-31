@@ -1,18 +1,10 @@
-import { useRef } from "react";
 import { Playhead } from "./Playhead";
 import { Ruler } from "./Ruler";
 import { TrackList } from "./TrackList";
 import { KeyframeList } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
-import { useSyncScroll } from "./hooks";
 
 export const Timeline = () => {
-  const rulerRef = useRef<HTMLDivElement>(null);
-  const keyframeListRef = useRef<HTMLDivElement>(null);
-  const trackListRef = useRef<HTMLDivElement>(null);
-  const playheadRef = useRef<HTMLDivElement>(null);
-  const { syncScroll } = useSyncScroll();
-
   return (
     <div
       className="relative h-[300px] w-full grid grid-cols-[300px_1fr] grid-rows-[40px_1fr] 
@@ -20,24 +12,10 @@ export const Timeline = () => {
       data-testid="timeline"
     >
       <PlayControls />
-      <Ruler
-        ref={rulerRef}
-        onScroll={() => {
-          syncScroll(rulerRef, true, false, keyframeListRef);
-        }}
-      />
-      <TrackList
-        ref={trackListRef}
-        onScroll={() => syncScroll(trackListRef, false, true, keyframeListRef)}
-      />
-      <KeyframeList
-        ref={keyframeListRef}
-        onScroll={() => {
-          syncScroll(keyframeListRef, true, false, rulerRef);
-          syncScroll(keyframeListRef, false, true, trackListRef);
-        }}
-      />
-      <Playhead ref={playheadRef} />
+      <Ruler />
+      <TrackList />
+      <KeyframeList />
+      <Playhead />
     </div>
   );
 };
