@@ -4,10 +4,14 @@ import { DURATION, TIME } from "./config";
 interface TimelineState {
   time: number;
   duration: number;
+  scrollLeft: number;
+  scrollTop: number;
 }
 interface TimelineActions {
   setTime: (val: number | string) => number;
   setDuration: (val: number | string) => number;
+  setScrollLeft: (val: number| undefined | null) => void;
+  setScrollTop: (val: number| undefined | null) => void;
   reset: () => void;
 }
 
@@ -38,6 +42,8 @@ const validateAndFormatValue = (
 const initialState: TimelineState = {
   time: TIME.INIT,
   duration: DURATION.INIT,
+  scrollLeft: 0,
+  scrollTop: 0,
 };
 
 export const useTimelineStore = create<TimelineState & TimelineActions>(
@@ -68,6 +74,20 @@ export const useTimelineStore = create<TimelineState & TimelineActions>(
         duration: newValue,
       }));
       return newValue;
+    },
+    setScrollLeft: (value) => {
+      if (value !== null && value !== undefined) {
+        set(() => ({
+          scrollLeft: value,
+        }));
+      }
+    },
+    setScrollTop: (value) => {
+      if (value !== null && value !== undefined) {
+        set(() => ({
+          scrollTop: value,
+        }));
+      }
     },
     // reset time and duration to initial values
     reset: () => {

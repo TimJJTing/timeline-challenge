@@ -4,16 +4,14 @@ import { Ruler } from "./Ruler";
 import { TrackList } from "./TrackList";
 import { KeyframeList } from "./KeyframeList";
 import { PlayControls } from "./PlayControls";
-import { useScrollSync, useScrollPosition } from "./hooks";
+import { useSyncScroll } from "./hooks";
 
 export const Timeline = () => {
   const rulerRef = useRef<HTMLDivElement>(null);
   const keyframeListRef = useRef<HTMLDivElement>(null);
   const trackListRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
-
-  const { syncScroll } = useScrollSync();
-  const { position, updatePosition } = useScrollPosition();
+  const { syncScroll } = useSyncScroll();
 
   return (
     <div
@@ -25,23 +23,21 @@ export const Timeline = () => {
       <Ruler
         ref={rulerRef}
         onScroll={() => {
-          syncScroll(rulerRef, keyframeListRef, true, false);
-          updatePosition(rulerRef);
+          syncScroll(rulerRef, true, false, keyframeListRef);
         }}
       />
       <TrackList
         ref={trackListRef}
-        onScroll={() => syncScroll(trackListRef, keyframeListRef, false, true)}
+        onScroll={() => syncScroll(trackListRef, false, true, keyframeListRef)}
       />
       <KeyframeList
         ref={keyframeListRef}
         onScroll={() => {
-          syncScroll(keyframeListRef, rulerRef, true, false);
-          syncScroll(keyframeListRef, trackListRef, false, true);
-          updatePosition(keyframeListRef);
+          syncScroll(keyframeListRef, true, false, rulerRef);
+          syncScroll(keyframeListRef, false, true, trackListRef);
         }}
       />
-      <Playhead ref={playheadRef} leftOffset={position.left} />
+      <Playhead ref={playheadRef} />
     </div>
   );
 };
