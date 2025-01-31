@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Timeline } from "../Timeline";
 import { useTimelineStore } from "../store";
@@ -158,7 +164,9 @@ describe("Ruler Behavior", () => {
         fireEvent.scroll(ruler, { target: { scrollLeft: 300 } });
       });
       expect(ruler.scrollLeft).toEqual(300);
-      expect(keyframeList.scrollLeft).toEqual(300);
+      await waitFor(() => {
+        expect(keyframeList.scrollLeft).toEqual(300);
+      });
     });
 
     it("scrolls the Keyframe List by 300px right eventually if the Ruler is scrolled by 300px right then 150px left", async () => {
@@ -169,7 +177,9 @@ describe("Ruler Behavior", () => {
         fireEvent.scroll(ruler, { target: { scrollLeft: 150 } });
       });
       expect(ruler.scrollLeft).toEqual(150);
-      expect(keyframeList.scrollLeft).toEqual(150);
+      await waitFor(() => {
+        expect(keyframeList.scrollLeft).toEqual(150);
+      });
     });
   });
 

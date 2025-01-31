@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import { Timeline } from "../Timeline";
 import { useTimelineStore } from "../store";
 const initialStoreState = useTimelineStore.getState();
@@ -35,7 +41,9 @@ describe("Track List Behavior", () => {
         fireEvent.scroll(trackList, { target: { scrollTop: 300 } });
       });
       expect(trackList.scrollTop).toEqual(300);
-      expect(keyframeList.scrollTop).toEqual(300);
+      await waitFor(() => {
+        expect(keyframeList.scrollTop).toEqual(300);
+      });
     });
 
     it("scrolls the Keyframe List by 300px down eventually if the Track List is scrolled by 300px down then 150px up", async () => {
@@ -46,7 +54,9 @@ describe("Track List Behavior", () => {
         fireEvent.scroll(trackList, { target: { scrollTop: 150 } });
       });
       expect(trackList.scrollTop).toEqual(150);
-      expect(keyframeList.scrollTop).toEqual(150);
+      await waitFor(() => {
+        expect(keyframeList.scrollTop).toEqual(150);
+      });
     });
   });
 });

@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { Timeline } from "../Timeline";
 import { useTimelineStore } from "../store";
@@ -52,7 +58,9 @@ describe("Keyframe List Behavior", () => {
         fireEvent.scroll(keyframeList, { target: { scrollTop: 300 } });
       });
       expect(keyframeList.scrollTop).toEqual(300);
-      expect(trackList.scrollTop).toEqual(300);
+      await waitFor(() => {
+        expect(trackList.scrollTop).toEqual(300);
+      });
     });
 
     it("scrolls the Track List by 150px down eventually if the Keyframe List is scrolled by 300px down then 150px up", async () => {
@@ -63,7 +71,9 @@ describe("Keyframe List Behavior", () => {
         fireEvent.scroll(keyframeList, { target: { scrollTop: 150 } });
       });
       expect(keyframeList.scrollTop).toEqual(150);
-      expect(trackList.scrollTop).toEqual(150);
+      await waitFor(() => {
+        expect(trackList.scrollTop).toEqual(150);
+      });
     });
   });
 
@@ -75,7 +85,9 @@ describe("Keyframe List Behavior", () => {
         fireEvent.scroll(keyframeList, { target: { scrollLeft: 300 } });
       });
       expect(keyframeList.scrollLeft).toEqual(300);
-      expect(ruler.scrollLeft).toEqual(300);
+      await waitFor(() => {
+        expect(ruler.scrollLeft).toEqual(300);
+      });
     });
 
     it("scrolls the Ruler by 150px right eventually if the Keyframe List is scrolled by 300px right then 150px left", async () => {
@@ -86,7 +98,9 @@ describe("Keyframe List Behavior", () => {
         fireEvent.scroll(keyframeList, { target: { scrollLeft: 150 } });
       });
       expect(keyframeList.scrollLeft).toEqual(150);
-      expect(ruler.scrollLeft).toEqual(150);
+      await waitFor(() => {
+        expect(ruler.scrollLeft).toEqual(150);
+      });
     });
   });
 
