@@ -48,7 +48,7 @@ export const useSyncScrollStore = (
   pullVerticalUpdate: boolean = true
 ) => {
   const isScrollingRef = useRef(false);
-  const frameIdRef = useRef<number>();
+  const frameIdRef = useRef<number | null>(null);
   const setScrollLeft = useScrollStore((state) => state.setScrollLeft);
   const setScrollTop = useScrollStore((state) => state.setScrollTop);
   const scrollLeft = useScrollStore((state) => state.scrollLeft);
@@ -68,7 +68,7 @@ export const useSyncScrollStore = (
         console.error("Error updating scroll position:", error);
       }
     }
-  }, [scrollLeft, scrollTop]);
+  }, [scrollLeft, scrollTop, pullHorizontalUpdate, pullVerticalUpdate]);
 
   // Push callback with RAF
   const syncScroll = useCallback(() => {
@@ -95,7 +95,7 @@ export const useSyncScrollStore = (
         }
       });
     }
-  }, [setScrollLeft, setScrollTop]);
+  }, [setScrollLeft, setScrollTop, pushHorizontalUpdate, pushVerticalUpdate]);
 
   // Cleanup
   useEffect(() => {
