@@ -1,11 +1,10 @@
-import { useRef } from "react";
+import React from "react";
 import { Segment } from "./Segment";
 import { useSyncScrollStore } from "./hooks";
 
-export const KeyframeList = () => {
-  const keyframeListRef = useRef<HTMLDivElement>(null);
+export const KeyframeList = React.forwardRef<HTMLDivElement>((_, ref) => {
   const syncScroll = useSyncScrollStore(
-    keyframeListRef,
+    ref as React.RefObject<HTMLDivElement>,
     true,
     true,
     true,
@@ -15,7 +14,7 @@ export const KeyframeList = () => {
     <div
       className="px-4 min-w-0 overflow-auto"
       data-testid="keyframe-list"
-      ref={keyframeListRef}
+      ref={ref}
       onScroll={syncScroll}
     >
       <Segment />
@@ -30,4 +29,4 @@ export const KeyframeList = () => {
       <Segment />
     </div>
   );
-};
+});

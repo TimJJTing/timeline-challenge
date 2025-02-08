@@ -56,7 +56,7 @@ export const useSyncScrollStore = (
 
   // Pull effect with error boundary
   useEffect(() => {
-    if (!isScrollingRef.current && scrolledRef.current) {
+    if (!isScrollingRef.current && scrolledRef?.current) {
       try {
         if (pullHorizontalUpdate) {
           scrolledRef.current.scrollLeft = scrollLeft;
@@ -68,11 +68,11 @@ export const useSyncScrollStore = (
         console.error("Error updating scroll position:", error);
       }
     }
-  }, [scrollLeft, scrollTop, pullHorizontalUpdate, pullVerticalUpdate]);
+  }, [scrollLeft, scrollTop, pullHorizontalUpdate, pullVerticalUpdate, scrolledRef]);
 
   // Push callback with RAF
   const syncScroll = useCallback(() => {
-    if (!isScrollingRef.current && scrolledRef.current) {
+    if (!isScrollingRef.current && scrolledRef?.current) {
       isScrollingRef.current = true;
 
       // Cancel any pending frame
@@ -95,7 +95,7 @@ export const useSyncScrollStore = (
         }
       });
     }
-  }, [setScrollLeft, setScrollTop, pushHorizontalUpdate, pushVerticalUpdate]);
+  }, [setScrollLeft, setScrollTop, pushHorizontalUpdate, pushVerticalUpdate, scrolledRef]);
 
   // Cleanup
   useEffect(() => {
